@@ -6,6 +6,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Random;
 import org.json.simple.*;
 import org.json.simple.parser.JSONParser;
+import java.util.Scanner;
 
 public class CavazosExample {
 
@@ -36,6 +37,23 @@ public class CavazosExample {
     } catch (Exception e) {
       e.printStackTrace();
     }
+    Scanner input = new Scanner(System.in);
+boolean running = true;
+String lastCommand = null;
+String redoCommand = null;
+
+while (running) {
+    System.out.println("\n-----------------------------------------------");
+    System.out.println("General Cavazos Commander App");
+    System.out.println("-----------------------------------------------");
+    System.out.println("i  Issue a command");
+    System.out.println("l  List all of the commands");
+    System.out.println("u  Undo the last command that was issued");
+    System.out.println("r  Redo the last command that was issued");
+    System.out.println("q  Quit");
+    System.out.print("\nEnter choice: ");
+    String choice = input.nextLine().trim().toLowerCase();
+
   }
 
   // randomly issue commands from General Cavazos
