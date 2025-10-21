@@ -52,6 +52,12 @@ public class CavazosExample {
         System.out.print("\nEnter choice: ");
         String choice = input.nextLine().trim().toLowerCase();
 
+        // ✅ Implement Quit command
+        if (choice.equals("q")) {
+          System.out.println("\nGoodbye, Commander!");
+          running = false;
+        }
+
         // 🧩 Placeholder to prevent unused variable warnings
         if (lastCommand == null && redoCommand == null && choice != null) {
           // do nothing; placeholder
