@@ -30,7 +30,7 @@ public class CavazosExample {
       boolean firstRun = true;
 
       ArrayList<String> issuedHistory = new ArrayList<>();
-      int currentIndex = -1;
+      int redoViewIndex = -1;
 
       printMenu();
 
@@ -46,7 +46,7 @@ public class CavazosExample {
           String choice = input.nextLine().trim().toLowerCase();
 
           switch (choice) {
-            case "i":
+            case "i": {
               if (commandArray.length == 0) {
                 System.out.println("\n⚠️ No commands available to issue.");
                 break;
@@ -56,47 +56,50 @@ public class CavazosExample {
               int randIndex = rand.nextInt(commandArray.length);
               String newCommand = commandArray[randIndex];
 
-              // If issuing after undo, clear any commands ahead
-              if (currentIndex < issuedHistory.size() - 1) {
-                issuedHistory.subList(currentIndex + 1, issuedHistory.size()).clear();
-              }
-
               issuedHistory.add(newCommand);
-              currentIndex = issuedHistory.size() - 1;
+              redoViewIndex = issuedHistory.size() - 1;
 
               System.out.println("\nIssued command: " + newCommand);
               break;
+            }
 
-            case "u":
-              if (currentIndex >= 0) {
-                System.out.println("\nUndid command: " + issuedHistory.get(currentIndex));
-                currentIndex--;
+            case "u": {
+              if (!issuedHistory.isEmpty()) {
+                String undone = issuedHistory.remove(issuedHistory.size() - 1);
+                System.out.println("\nUndid command: " + undone);
+                redoViewIndex = issuedHistory.size() - 1;
               } else {
                 System.out.println("\n⚠️ No command to undo.");
               }
               break;
+            }
 
-            case "r":
-              if (currentIndex < issuedHistory.size() - 1) {
-                currentIndex++;
-                System.out.println("\nRedid command: " + issuedHistory.get(currentIndex));
+            case "r": {
+              if (!issuedHistory.isEmpty() && redoViewIndex >= 0) {
+                String toShow = issuedHistory.get(redoViewIndex);
+                System.out.println("\nRedid command: " + toShow);
+                redoViewIndex--;
               } else {
-                System.out.println("\n⚠️ No command to redo.");
+                System.out.println("\n⚠️ No previous command to redo.");
               }
               break;
+            }
 
-            case "l":
+            case "l": {
               System.out.println("\n----- List of all commands -----");
               print(commandArray);
               break;
+            }
 
-            case "q":
+            case "q": {
               System.out.println("\nGoodbye, Commander!");
               userQuit = true;
               break;
+            }
 
-            default:
+            default: {
               System.out.println("\n❌ Invalid option. Please enter i, l, u, r, or q.");
+            }
           }
 
         } catch (Exception innerError) {
