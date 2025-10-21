@@ -12,95 +12,108 @@ public class CavazosExample {
 
   public static void main(String[] args) {
     try {
-      // Load commands.json from resources
+      // Load commands.json from the resources folder
       InputStream in = CavazosExample.class.getResourceAsStream("/commands.json");
       if (in == null) {
         System.err.println("❌ Error: commands.json not found in resources folder.");
         return;
       }
 
-      // Parse JSON file
+      // Parse the JSON file safely
       JSONParser parser = new JSONParser();
       JSONArray commandJSONArray =
           (JSONArray) parser.parse(new InputStreamReader(in, StandardCharsets.UTF_8));
 
       String[] commandArray = getCommandArray(commandJSONArray);
 
-      // Display all commands once at startup
+      // Print the complete list of commands at startup
       System.out.println("----- List of all commands -----");
       print(commandArray);
 
-      // Display five random commands
+      // Issue five random commands
       System.out.println("\n----- Issuing 5 random commands from General Cavazos -----");
       randomCommand(commandArray, 5);
 
-      // Menu loop variables
+      // Set up menu control variables
       Scanner input = new Scanner(System.in);
       boolean userQuit = false;
       String lastCommand = null;
       String redoCommand = null;
 
-      // Main menu loop
+      // Begin interactive menu loop
       while (!userQuit) {
-        printMenu();
-        System.out.print("Enter a command: ");
-        String choice = input.nextLine().trim().toLowerCase();
+        try {
+          printMenu();
+          System.out.print("Enter a command: ");
+          String choice = input.nextLine().trim().toLowerCase();
 
-        // Handle menu choices
-        switch (choice) {
-          case "i":
-            // Issue a random command
-            Random rand = new Random();
-            int randIndex = rand.nextInt(commandArray.length);
-            lastCommand = commandArray[randIndex];
-            redoCommand = null;
-            System.out.println("\nIssued command: " + lastCommand);
-            break;
-
-          case "l":
-            // List all commands
-            System.out.println("\n----- List of all commands -----");
-            print(commandArray);
-            break;
-
-          case "u":
-            // Undo the last command
-            if (lastCommand != null) {
-              redoCommand = lastCommand;
-              System.out.println("\nUndid command: " + lastCommand);
-              lastCommand = null;
-            } else {
-              System.out.println("\nNo command to undo.");
-            }
-            break;
-
-          case "r":
-            // Redo the last undone command
-            if (redoCommand != null) {
-              lastCommand = redoCommand;
-              System.out.println("\nRedid command: " + redoCommand);
+          switch (choice) {
+            case "i":
+              // Issue a random command
+              if (commandArray.length == 0) {
+                System.out.println("\n⚠️ No commands available to issue.");
+                break;
+              }
+              Random rand = new Random();
+              int randIndex = rand.nextInt(commandArray.length);
+              lastCommand = commandArray[randIndex];
               redoCommand = null;
-            } else {
-              System.out.println("\nNo command to redo.");
-            }
-            break;
+              System.out.println("\nIssued command: " + lastCommand);
+              break;
 
-          case "q":
-            // Quit the program
-            System.out.println("\nGoodbye, Commander!");
-            userQuit = true;
-            break;
+            case "l":
+              // List all commands
+              System.out.println("\n----- List of all commands -----");
+              print(commandArray);
+              break;
 
-          default:
-            // Invalid command
-            System.out.println("\nInvalid command. Please try again.");
+            case "u":
+              // Undo the last issued command
+              if (lastCommand != null) {
+                redoCommand = lastCommand;
+                System.out.println("\nUndid command: " + lastCommand);
+                lastCommand = null;
+              } else {
+                System.out.println("\n⚠️ No command to undo.");
+              }
+              break;
+
+            case "r":
+              // Redo the last undone command
+              if (redoCommand != null) {
+                lastCommand = redoCommand;
+                System.out.println("\nRedid command: " + redoCommand);
+                redoCommand = null;
+              } else {
+                System.out.println("\n⚠️ No command to redo.");
+              }
+              break;
+
+            case "q":
+              // Quit the program
+              System.out.println("\nGoodbye, Commander!");
+              userQuit = true;
+              break;
+
+            default:
+              // Handle invalid input safely
+              System.out.println("\n❌ Invalid option. Please enter i, l, u, r, or q.");
+          }
+
+        } catch (Exception innerError) {
+          // Handle any unexpected input-related issues
+          System.out.println("\n⚠️ Error: " + innerError.getMessage());
+          System.out.println("Please try again.\n");
         }
       }
 
       input.close();
 
     } catch (Exception e) {
-      e.printStackTrace();
+      // Handle startup and JSON-related errors
+      System.out.println("\n❌ Fatal Error: Unable to start the General Cavazos Commander App.");
+      System.out.println("Reason: " + e.getMessage());
+      System.out.println("Please check that your commands.json file is valid and try again.");
     }
   }
 
@@ -120,30 +133,56 @@ public class CavazosExample {
 
   // Randomly issues multiple commands
   public static void randomCommand(String[] commandArray, int numCommand) {
-    Random rand = new Random();
-    System.out.printf("Number\tCommand\n");
-    System.out.printf("------\t---------------\n");
-    for (int i = 0; i < numCommand; i++) {
-      int randIndex = rand.nextInt(commandArray.length);
-      System.out.printf("%04d\t%s\n", i, commandArray[randIndex]);
+    try {
+      if (commandArray == null || commandArray.length == 0) {
+        System.out.println("\n⚠️ No commands found to issue.");
+        return;
+      }
+
+      Random rand = new Random();
+      System.out.printf("Number\tCommand\n");
+      System.out.printf("------\t---------------\n");
+
+      for (int i = 0; i < numCommand; i++) {
+        int randIndex = rand.nextInt(commandArray.length);
+        System.out.printf("%04d\t%s\n", i, commandArray[randIndex]);
+      }
+
+    } catch (Exception e) {
+      System.out.println("\n⚠️ Error issuing random commands: " + e.getMessage());
     }
   }
 
   // Prints all commands from the array
   public static void print(String[] commandArray) {
-    System.out.printf("Number\tCommand\n");
-    System.out.printf("------\t---------------\n");
-    for (int i = 0; i < commandArray.length; i++) {
-      System.out.printf("%04d\t%s\n", i, commandArray[i]);
+    try {
+      if (commandArray == null || commandArray.length == 0) {
+        System.out.println("⚠️ No commands to display.");
+        return;
+      }
+
+      System.out.printf("Number\tCommand\n");
+      System.out.printf("------\t---------------\n");
+      for (int i = 0; i < commandArray.length; i++) {
+        System.out.printf("%04d\t%s\n", i, commandArray[i]);
+      }
+
+    } catch (Exception e) {
+      System.out.println("\n⚠️ Error printing command list: " + e.getMessage());
     }
   }
 
   // Converts a JSONArray into a regular String array
   public static String[] getCommandArray(JSONArray commandArray) {
+    if (commandArray == null) {
+      System.out.println("\n⚠️ Warning: Command list is empty.");
+      return new String[0];
+    }
+
     String[] arr = new String[commandArray.size()];
     for (int i = 0; i < commandArray.size(); i++) {
-      String command = commandArray.get(i).toString();
-      arr[i] = command;
+      Object obj = commandArray.get(i);
+      arr[i] = (obj != null) ? obj.toString() : "Unknown Command";
     }
     return arr;
   }
