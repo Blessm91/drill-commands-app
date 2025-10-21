@@ -12,30 +12,40 @@ public class CavazosExample {
 
   public static void main(String[] args) {
     try {
-      // Load commands.json from the resources folder
+      // Load commands.json from resources
       InputStream in = CavazosExample.class.getResourceAsStream("/commands.json");
       if (in == null) {
         System.err.println("❌ Error: commands.json not found in resources folder.");
         return;
       }
 
-      // Parse the JSON file safely
+      // Parse JSON safely
       JSONParser parser = new JSONParser();
       JSONArray commandJSONArray =
           (JSONArray) parser.parse(new InputStreamReader(in, StandardCharsets.UTF_8));
 
       String[] commandArray = getCommandArray(commandJSONArray);
 
-      // Set up menu control variables
+      // Display all commands at startup
+      System.out.println("----- List of all commands -----");
+      print(commandArray);
+
+      // Display five random commands
+      System.out.println("\n----- Issuing 5 random commands from General Cavazos -----");
+      randomCommand(commandArray, 5);
+
+      // Initialize variables
       Scanner input = new Scanner(System.in);
       boolean userQuit = false;
       String lastCommand = null;
       String redoCommand = null;
 
-      // Begin interactive menu loop
+      // Print the menu ONCE
+      printMenu();
+
+      // Start command loop
       while (!userQuit) {
         try {
-          printMenu();
           System.out.print("Enter a command: ");
           String choice = input.nextLine().trim().toLowerCase();
 
@@ -88,12 +98,17 @@ public class CavazosExample {
               break;
 
             default:
-              // Handle invalid input safely
+              // Handle invalid input
               System.out.println("\n❌ Invalid option. Please enter i, l, u, r, or q.");
           }
 
+          // Only show "Enter next command" if the user hasn’t quit
+          if (!userQuit) {
+            System.out.println();
+            System.out.print("Enter next command: ");
+          }
+
         } catch (Exception innerError) {
-          // Handle any unexpected input-related issues
           System.out.println("\n⚠️ Error: " + innerError.getMessage());
           System.out.println("Please try again.\n");
         }
@@ -102,14 +117,13 @@ public class CavazosExample {
       input.close();
 
     } catch (Exception e) {
-      // Handle startup and JSON-related errors
       System.out.println("\n❌ Fatal Error: Unable to start the General Cavazos Commander App.");
       System.out.println("Reason: " + e.getMessage());
       System.out.println("Please check that your commands.json file is valid and try again.");
     }
   }
 
-  // Displays the text-based menu
+  // Prints the main menu once
   public static void printMenu() {
     System.out.println();
     System.out.println("------------------------------------------------------------");
@@ -164,7 +178,7 @@ public class CavazosExample {
     }
   }
 
-  // Converts a JSONArray into a regular String array
+  // Converts JSONArray to String array
   public static String[] getCommandArray(JSONArray commandArray) {
     if (commandArray == null) {
       System.out.println("\n⚠️ Warning: Command list is empty.");
