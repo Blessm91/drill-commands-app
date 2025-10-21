@@ -22,7 +22,7 @@ public class CavazosExample {
       // Parse JSON file
       JSONParser parser = new JSONParser();
       JSONArray commandJSONArray =
-        (JSONArray) parser.parse(new InputStreamReader(in, StandardCharsets.UTF_8));
+          (JSONArray) parser.parse(new InputStreamReader(in, StandardCharsets.UTF_8));
 
       String[] commandArray = getCommandArray(commandJSONArray);
 
@@ -34,19 +34,22 @@ public class CavazosExample {
       System.out.println("\n----- Issuing 5 random commands from General Cavazos -----");
       randomCommand(commandArray, 5);
 
-      // Menu loop
+      // Menu loop variables
       Scanner input = new Scanner(System.in);
       boolean userQuit = false;
       String lastCommand = null;
       String redoCommand = null;
 
+      // Main menu loop
       while (!userQuit) {
         printMenu();
-        System.out.print("\nEnter a command: ");
+        System.out.print("Enter a command: ");
         String choice = input.nextLine().trim().toLowerCase();
 
+        // Handle menu choices
         switch (choice) {
           case "i":
+            // Issue a random command
             Random rand = new Random();
             int randIndex = rand.nextInt(commandArray.length);
             lastCommand = commandArray[randIndex];
@@ -55,11 +58,13 @@ public class CavazosExample {
             break;
 
           case "l":
+            // List all commands
             System.out.println("\n----- List of all commands -----");
             print(commandArray);
             break;
 
           case "u":
+            // Undo the last command
             if (lastCommand != null) {
               redoCommand = lastCommand;
               System.out.println("\nUndid command: " + lastCommand);
@@ -70,6 +75,7 @@ public class CavazosExample {
             break;
 
           case "r":
+            // Redo the last undone command
             if (redoCommand != null) {
               lastCommand = redoCommand;
               System.out.println("\nRedid command: " + redoCommand);
@@ -80,11 +86,13 @@ public class CavazosExample {
             break;
 
           case "q":
+            // Quit the program
             System.out.println("\nGoodbye, Commander!");
             userQuit = true;
             break;
 
           default:
+            // Invalid command
             System.out.println("\nInvalid command. Please try again.");
         }
       }
@@ -96,20 +104,21 @@ public class CavazosExample {
     }
   }
 
-  // Displays the interactive menu
+  // Displays the text-based menu
   public static void printMenu() {
-    System.out.println("\n-----------------------------------------------");
+    System.out.println();
+    System.out.println("------------------------------------------------------------");
     System.out.println("General Cavazos Commander App");
-    System.out.println("-----------------------------------------------");
+    System.out.println("------------------------------------------------------------");
     System.out.println("i  Issue a command");
     System.out.println("l  List all of the commands");
     System.out.println("u  Undo the last command that was issued");
     System.out.println("r  Redo the last command that was issued");
     System.out.println("q  Quit");
-    System.out.println("-----------------------------------------------");
+    System.out.println("------------------------------------------------------------");
   }
 
-  // Randomly issues five commands from the list
+  // Randomly issues multiple commands
   public static void randomCommand(String[] commandArray, int numCommand) {
     Random rand = new Random();
     System.out.printf("Number\tCommand\n");
@@ -120,7 +129,7 @@ public class CavazosExample {
     }
   }
 
-  // Prints all commands
+  // Prints all commands from the array
   public static void print(String[] commandArray) {
     System.out.printf("Number\tCommand\n");
     System.out.printf("------\t---------------\n");
@@ -129,7 +138,7 @@ public class CavazosExample {
     }
   }
 
-  // Converts JSONArray into String array
+  // Converts a JSONArray into a regular String array
   public static String[] getCommandArray(JSONArray commandArray) {
     String[] arr = new String[commandArray.size()];
     for (int i = 0; i < commandArray.size(); i++) {
