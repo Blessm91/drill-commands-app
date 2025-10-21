@@ -24,6 +24,7 @@ public class CavazosExample {
           (JSONArray) parser.parse(new InputStreamReader(in, StandardCharsets.UTF_8));
 
       String[] commandArray = getCommandArray(commandJSONArray);
+
       Scanner input = new Scanner(System.in);
       boolean userQuit = false;
       boolean firstRun = true;
@@ -55,7 +56,7 @@ public class CavazosExample {
               int randIndex = rand.nextInt(commandArray.length);
               String newCommand = commandArray[randIndex];
 
-              // If new command is issued after undoing, trim history beyond current index
+              // If issuing after undo, clear any commands ahead
               if (currentIndex < issuedHistory.size() - 1) {
                 issuedHistory.subList(currentIndex + 1, issuedHistory.size()).clear();
               }
@@ -69,7 +70,6 @@ public class CavazosExample {
             case "u":
               if (currentIndex >= 0) {
                 System.out.println("\nUndid command: " + issuedHistory.get(currentIndex));
-                issuedHistory.remove(currentIndex);
                 currentIndex--;
               } else {
                 System.out.println("\n⚠️ No command to undo.");
@@ -77,11 +77,11 @@ public class CavazosExample {
               break;
 
             case "r":
-              if (currentIndex > 0) {
-                currentIndex--;
+              if (currentIndex < issuedHistory.size() - 1) {
+                currentIndex++;
                 System.out.println("\nRedid command: " + issuedHistory.get(currentIndex));
               } else {
-                System.out.println("\n⚠️ No previous command to redo.");
+                System.out.println("\n⚠️ No command to redo.");
               }
               break;
 
