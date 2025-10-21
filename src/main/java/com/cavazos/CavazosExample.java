@@ -12,87 +12,80 @@ public class CavazosExample {
 
   public static void main(String[] args) {
     try {
-      // ✅ Load commands.json from resources folder
+      // Load commands.json from resources
       InputStream in = CavazosExample.class.getResourceAsStream("/commands.json");
       if (in == null) {
         System.err.println("❌ Error: commands.json not found in resources folder.");
         return;
       }
 
-      // ✅ Parse JSON using JSONParser instead of file path
+      // Parse JSON file
       JSONParser parser = new JSONParser();
       JSONArray commandJSONArray =
         (JSONArray) parser.parse(new InputStreamReader(in, StandardCharsets.UTF_8));
 
       String[] commandArray = getCommandArray(commandJSONArray);
 
-      // ✅ Print 5 random commands
+      // Display all commands once at startup
+      System.out.println("----- List of all commands -----");
+      print(commandArray);
+
+      // Display five random commands
       System.out.println("\n----- Issuing 5 random commands from General Cavazos -----");
       randomCommand(commandArray, 5);
 
-      // ✅ Menu section
+      // Menu loop
       Scanner input = new Scanner(System.in);
-      boolean running = true;
+      boolean userQuit = false;
       String lastCommand = null;
       String redoCommand = null;
 
-      while (running) {
-        System.out.println("\n-----------------------------------------------");
-        System.out.println("General Cavazos Commander App");
-        System.out.println("-----------------------------------------------");
-        System.out.println("i  Issue a command");
-        System.out.println("l  List all of the commands");
-        System.out.println("u  Undo the last command that was issued");
-        System.out.println("r  Redo the last command that was issued");
-        System.out.println("q  Quit");
-        System.out.print("\nEnter choice: ");
+      while (!userQuit) {
+        printMenu();
+        System.out.print("\nEnter a command: ");
         String choice = input.nextLine().trim().toLowerCase();
 
-        // ✅ Implement Quit command
-        if (choice.equals("q")) {
-          System.out.println("\nGoodbye, Commander!");
-          running = false;
-        }
-
-         // ✅ Implement List command
-        else if (choice.equals("l")) {
-          System.out.println("\n----- List of all commands -----");
-          print(commandArray);
-        }
-
-        // ✅ Implement Issue command
-        else if (choice.equals("i")) {
-          Random rand = new Random();
-          int randIndex = rand.nextInt(commandArray.length);
-          lastCommand = commandArray[randIndex];
-          System.out.println("\nIssued command: " + lastCommand);
-        }
-
-        // ✅ Undo command
-        else if (choice.equals("u")) {
-          if (lastCommand != null) {
-            redoCommand = lastCommand;
-            System.out.println("\nUndid command: " + lastCommand);
-            lastCommand = null;
-          } else {
-            System.out.println("\nNo command to undo.");
-          }
-        }
-
-        // ✅ Redo command
-        else if (choice.equals("r")) {
-          if (redoCommand != null) {
-            lastCommand = redoCommand;
-            System.out.println("\nRedid command: " + redoCommand);
+        switch (choice) {
+          case "i":
+            Random rand = new Random();
+            int randIndex = rand.nextInt(commandArray.length);
+            lastCommand = commandArray[randIndex];
             redoCommand = null;
-          } else {
-            System.out.println("\nNo command to redo.");
-          }
-        }
+            System.out.println("\nIssued command: " + lastCommand);
+            break;
 
-        // 🧩 Placeholder to prevent unused variable warnings
-        if (lastCommand == null && redoCommand == null && choice != null) {
-          // do nothing; placeholder
+          case "l":
+            System.out.println("\n----- List of all commands -----");
+            print(commandArray);
+            break;
+
+          case "u":
+            if (lastCommand != null) {
+              redoCommand = lastCommand;
+              System.out.println("\nUndid command: " + lastCommand);
+              lastCommand = null;
+            } else {
+              System.out.println("\nNo command to undo.");
+            }
+            break;
+
+          case "r":
+            if (redoCommand != null) {
+              lastCommand = redoCommand;
+              System.out.println("\nRedid command: " + redoCommand);
+              redoCommand = null;
+            } else {
+              System.out.println("\nNo command to redo.");
+            }
+            break;
+
+          case "q":
+            System.out.println("\nGoodbye, Commander!");
+            userQuit = true;
+            break;
+
+          default:
+            System.out.println("\nInvalid command. Please try again.");
         }
       }
 
@@ -103,7 +96,20 @@ public class CavazosExample {
     }
   }
 
-  // randomly issue commands from General Cavazos
+  // Displays the interactive menu
+  public static void printMenu() {
+    System.out.println("\n-----------------------------------------------");
+    System.out.println("General Cavazos Commander App");
+    System.out.println("-----------------------------------------------");
+    System.out.println("i  Issue a command");
+    System.out.println("l  List all of the commands");
+    System.out.println("u  Undo the last command that was issued");
+    System.out.println("r  Redo the last command that was issued");
+    System.out.println("q  Quit");
+    System.out.println("-----------------------------------------------");
+  }
+
+  // Randomly issues five commands from the list
   public static void randomCommand(String[] commandArray, int numCommand) {
     Random rand = new Random();
     System.out.printf("Number\tCommand\n");
@@ -114,7 +120,7 @@ public class CavazosExample {
     }
   }
 
-  // print command array
+  // Prints all commands
   public static void print(String[] commandArray) {
     System.out.printf("Number\tCommand\n");
     System.out.printf("------\t---------------\n");
@@ -123,7 +129,7 @@ public class CavazosExample {
     }
   }
 
-  // get array of commands
+  // Converts JSONArray into String array
   public static String[] getCommandArray(JSONArray commandArray) {
     String[] arr = new String[commandArray.size()];
     for (int i = 0; i < commandArray.size(); i++) {
