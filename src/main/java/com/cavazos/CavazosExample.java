@@ -58,6 +58,12 @@ public class CavazosExample {
           running = false;
         }
 
+         // ✅ Implement List command
+        else if (choice.equals("l")) {
+          System.out.println("\n----- List of all commands -----");
+          print(commandArray);
+        }
+
         // 🧩 Placeholder to prevent unused variable warnings
         if (lastCommand == null && redoCommand == null && choice != null) {
           // do nothing; placeholder
