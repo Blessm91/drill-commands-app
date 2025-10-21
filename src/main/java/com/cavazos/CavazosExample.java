@@ -79,6 +79,17 @@ public class CavazosExample {
           }
         }
 
+        // ✅ Redo command
+        else if (choice.equals("r")) {
+          if (redoCommand != null) {
+            lastCommand = redoCommand;
+            System.out.println("\nRedid command: " + redoCommand);
+            redoCommand = null;
+          } else {
+            System.out.println("\nNo command to redo.");
+          }
+        }
+
         // 🧩 Placeholder to prevent unused variable warnings
         if (lastCommand == null && redoCommand == null && choice != null) {
           // do nothing; placeholder
