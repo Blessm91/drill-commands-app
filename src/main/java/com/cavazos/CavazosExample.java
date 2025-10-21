@@ -26,10 +26,6 @@ public class CavazosExample {
 
       String[] commandArray = getCommandArray(commandJSONArray);
 
-      // ✅ Print all commands
-      System.out.println("----- List of all commands -----");
-      print(commandArray);
-
       // ✅ Print 5 random commands
       System.out.println("\n----- Issuing 5 random commands from General Cavazos -----");
       randomCommand(commandArray, 5);
