@@ -26,14 +26,6 @@ public class CavazosExample {
 
       String[] commandArray = getCommandArray(commandJSONArray);
 
-      // Display all commands at startup
-      System.out.println("----- List of all commands -----");
-      print(commandArray);
-
-      // Display five random commands
-      System.out.println("\n----- Issuing 5 random commands from General Cavazos -----");
-      randomCommand(commandArray, 5);
-
       // Initialize variables
       Scanner input = new Scanner(System.in);
       boolean userQuit = false;
