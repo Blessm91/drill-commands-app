@@ -1,27 +1,41 @@
 package com.cavazos;
 
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.Random;
 import org.json.simple.*;
+import org.json.simple.parser.JSONParser;
 
 public class CavazosExample {
 
   public static void main(String[] args) {
-    String fileName =
-      "/Users/jerom/Documents/GitHub/class-java/general-cavazos/undoredo/src/main/java/com/cavazos/commands.json";
+    try {
+      // ✅ Load commands.json from resources folder
+      InputStream in = CavazosExample.class.getResourceAsStream("/commands.json");
+      if (in == null) {
+        System.err.println("❌ Error: commands.json not found in resources folder.");
+        return;
+      }
 
-    // read coammands
-    JSONArray commandJSONArray = JSONFile.readArray(fileName);
-    String[] commandArray = getCommandArray(commandJSONArray);
-    System.out.println(commandArray);
+      // ✅ Parse JSON using JSONParser instead of file path
+      JSONParser parser = new JSONParser();
+      JSONArray commandJSONArray =
+        (JSONArray) parser.parse(new InputStreamReader(in, StandardCharsets.UTF_8));
 
-    // print list of all commands
-    System.out.println("----- List of all commands -----");
-    print(commandArray);
+      String[] commandArray = getCommandArray(commandJSONArray);
 
-    System.out.println(
-      "----- Issuing 5 random commands from General Cavazos -----"
-    );
-    randomCommand(commandArray, 5);
+      // ✅ Print all commands
+      System.out.println("----- List of all commands -----");
+      print(commandArray);
+
+      // ✅ Print 5 random commands
+      System.out.println("\n----- Issuing 5 random commands from General Cavazos -----");
+      randomCommand(commandArray, 5);
+
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
   }
 
   // randomly issue commands from General Cavazos
@@ -48,7 +62,6 @@ public class CavazosExample {
   public static String[] getCommandArray(JSONArray commandArray) {
     String[] arr = new String[commandArray.size()];
 
-    // get names from json object
     for (int i = 0; i < commandArray.size(); i++) {
       String command = commandArray.get(i).toString();
       arr[i] = command;
