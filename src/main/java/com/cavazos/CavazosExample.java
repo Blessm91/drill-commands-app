@@ -68,6 +68,17 @@ public class CavazosExample {
           System.out.println("\nIssued command: " + lastCommand);
         }
 
+        // ✅ Undo command
+        else if (choice.equals("u")) {
+          if (lastCommand != null) {
+            redoCommand = lastCommand;
+            System.out.println("\nUndid command: " + lastCommand);
+            lastCommand = null;
+          } else {
+            System.out.println("\nNo command to undo.");
+          }
+        }
+
         // 🧩 Placeholder to prevent unused variable warnings
         if (lastCommand == null && redoCommand == null && choice != null) {
           // do nothing; placeholder
