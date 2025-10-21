@@ -60,6 +60,14 @@ public class CavazosExample {
           print(commandArray);
         }
 
+        // ✅ Implement Issue command
+        else if (choice.equals("i")) {
+          Random rand = new Random();
+          int randIndex = rand.nextInt(commandArray.length);
+          lastCommand = commandArray[randIndex];
+          System.out.println("\nIssued command: " + lastCommand);
+        }
+
         // 🧩 Placeholder to prevent unused variable warnings
         if (lastCommand == null && redoCommand == null && choice != null) {
           // do nothing; placeholder
