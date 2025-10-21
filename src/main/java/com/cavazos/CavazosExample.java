@@ -12,38 +12,43 @@ public class CavazosExample {
 
   public static void main(String[] args) {
     try {
-      // Load commands.json from resources
+      // Load commands.json from the resources folder
       InputStream in = CavazosExample.class.getResourceAsStream("/commands.json");
       if (in == null) {
         System.err.println("❌ Error: commands.json not found in resources folder.");
         return;
       }
 
-      // Parse JSON safely
+      // Parse JSON file safely
       JSONParser parser = new JSONParser();
       JSONArray commandJSONArray =
           (JSONArray) parser.parse(new InputStreamReader(in, StandardCharsets.UTF_8));
 
       String[] commandArray = getCommandArray(commandJSONArray);
 
-      // Initialize variables
       Scanner input = new Scanner(System.in);
       boolean userQuit = false;
+      boolean firstRun = true;
       String lastCommand = null;
       String redoCommand = null;
 
-      // Print the menu ONCE
+      // Print the menu once
       printMenu();
 
-      // Start command loop
       while (!userQuit) {
         try {
-          System.out.print("Enter a command: ");
+          // Only show "Enter a command" on the very first run
+          if (firstRun) {
+            System.out.print("Enter a command: ");
+            firstRun = false;
+          } else {
+            System.out.print("Enter next command: ");
+          }
+
           String choice = input.nextLine().trim().toLowerCase();
 
           switch (choice) {
             case "i":
-              // Issue a random command
               if (commandArray.length == 0) {
                 System.out.println("\n⚠️ No commands available to issue.");
                 break;
@@ -56,13 +61,11 @@ public class CavazosExample {
               break;
 
             case "l":
-              // List all commands
               System.out.println("\n----- List of all commands -----");
               print(commandArray);
               break;
 
             case "u":
-              // Undo the last issued command
               if (lastCommand != null) {
                 redoCommand = lastCommand;
                 System.out.println("\nUndid command: " + lastCommand);
@@ -73,7 +76,6 @@ public class CavazosExample {
               break;
 
             case "r":
-              // Redo the last undone command
               if (redoCommand != null) {
                 lastCommand = redoCommand;
                 System.out.println("\nRedid command: " + redoCommand);
@@ -84,20 +86,12 @@ public class CavazosExample {
               break;
 
             case "q":
-              // Quit the program
               System.out.println("\nGoodbye, Commander!");
               userQuit = true;
               break;
 
             default:
-              // Handle invalid input
               System.out.println("\n❌ Invalid option. Please enter i, l, u, r, or q.");
-          }
-
-          // Only show "Enter next command" if the user hasn’t quit
-          if (!userQuit) {
-            System.out.println();
-            System.out.print("Enter next command: ");
           }
 
         } catch (Exception innerError) {
@@ -115,7 +109,6 @@ public class CavazosExample {
     }
   }
 
-  // Prints the main menu once
   public static void printMenu() {
     System.out.println();
     System.out.println("------------------------------------------------------------");
@@ -129,7 +122,6 @@ public class CavazosExample {
     System.out.println("------------------------------------------------------------");
   }
 
-  // Randomly issues multiple commands
   public static void randomCommand(String[] commandArray, int numCommand) {
     try {
       if (commandArray == null || commandArray.length == 0) {
@@ -151,7 +143,6 @@ public class CavazosExample {
     }
   }
 
-  // Prints all commands from the array
   public static void print(String[] commandArray) {
     try {
       if (commandArray == null || commandArray.length == 0) {
@@ -170,7 +161,6 @@ public class CavazosExample {
     }
   }
 
-  // Converts JSONArray to String array
   public static String[] getCommandArray(JSONArray commandArray) {
     if (commandArray == null) {
       System.out.println("\n⚠️ Warning: Command list is empty.");
