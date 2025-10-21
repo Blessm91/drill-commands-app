@@ -52,7 +52,10 @@ public class CavazosExample {
         System.out.print("\nEnter choice: ");
         String choice = input.nextLine().trim().toLowerCase();
 
-        // No logic yet — structure only
+        // 🧩 Placeholder to prevent unused variable warnings
+        if (lastCommand == null && redoCommand == null && choice != null) {
+          // do nothing; placeholder
+        }
       }
 
       input.close();
