@@ -4,9 +4,9 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.Random;
+import java.util.Scanner;
 import org.json.simple.*;
 import org.json.simple.parser.JSONParser;
-import java.util.Scanner;
 
 public class CavazosExample {
 
@@ -34,26 +34,32 @@ public class CavazosExample {
       System.out.println("\n----- Issuing 5 random commands from General Cavazos -----");
       randomCommand(commandArray, 5);
 
+      // ✅ Menu section
+      Scanner input = new Scanner(System.in);
+      boolean running = true;
+      String lastCommand = null;
+      String redoCommand = null;
+
+      while (running) {
+        System.out.println("\n-----------------------------------------------");
+        System.out.println("General Cavazos Commander App");
+        System.out.println("-----------------------------------------------");
+        System.out.println("i  Issue a command");
+        System.out.println("l  List all of the commands");
+        System.out.println("u  Undo the last command that was issued");
+        System.out.println("r  Redo the last command that was issued");
+        System.out.println("q  Quit");
+        System.out.print("\nEnter choice: ");
+        String choice = input.nextLine().trim().toLowerCase();
+
+        // No logic yet — structure only
+      }
+
+      input.close();
+
     } catch (Exception e) {
       e.printStackTrace();
     }
-    Scanner input = new Scanner(System.in);
-boolean running = true;
-String lastCommand = null;
-String redoCommand = null;
-
-while (running) {
-    System.out.println("\n-----------------------------------------------");
-    System.out.println("General Cavazos Commander App");
-    System.out.println("-----------------------------------------------");
-    System.out.println("i  Issue a command");
-    System.out.println("l  List all of the commands");
-    System.out.println("u  Undo the last command that was issued");
-    System.out.println("r  Redo the last command that was issued");
-    System.out.println("q  Quit");
-    System.out.print("\nEnter choice: ");
-    String choice = input.nextLine().trim().toLowerCase();
-
   }
 
   // randomly issue commands from General Cavazos
@@ -79,7 +85,6 @@ while (running) {
   // get array of commands
   public static String[] getCommandArray(JSONArray commandArray) {
     String[] arr = new String[commandArray.size()];
-
     for (int i = 0; i < commandArray.size(); i++) {
       String command = commandArray.get(i).toString();
       arr[i] = command;
