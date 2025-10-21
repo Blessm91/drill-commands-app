@@ -3,6 +3,7 @@ package com.cavazos;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.Random;
 import java.util.Scanner;
 import org.json.simple.*;
@@ -12,32 +13,28 @@ public class CavazosExample {
 
   public static void main(String[] args) {
     try {
-      // Load commands.json from the resources folder
       InputStream in = CavazosExample.class.getResourceAsStream("/commands.json");
       if (in == null) {
         System.err.println("❌ Error: commands.json not found in resources folder.");
         return;
       }
 
-      // Parse JSON file safely
       JSONParser parser = new JSONParser();
       JSONArray commandJSONArray =
           (JSONArray) parser.parse(new InputStreamReader(in, StandardCharsets.UTF_8));
 
       String[] commandArray = getCommandArray(commandJSONArray);
-
       Scanner input = new Scanner(System.in);
       boolean userQuit = false;
       boolean firstRun = true;
-      String lastCommand = null;
-      String redoCommand = null;
 
-      // Print the menu once
+      ArrayList<String> issuedHistory = new ArrayList<>();
+      int currentIndex = -1;
+
       printMenu();
 
       while (!userQuit) {
         try {
-          // Only show "Enter a command" on the very first run
           if (firstRun) {
             System.out.print("Enter a command: ");
             firstRun = false;
@@ -53,36 +50,44 @@ public class CavazosExample {
                 System.out.println("\n⚠️ No commands available to issue.");
                 break;
               }
+
               Random rand = new Random();
               int randIndex = rand.nextInt(commandArray.length);
-              lastCommand = commandArray[randIndex];
-              redoCommand = null;
-              System.out.println("\nIssued command: " + lastCommand);
-              break;
+              String newCommand = commandArray[randIndex];
 
-            case "l":
-              System.out.println("\n----- List of all commands -----");
-              print(commandArray);
+              // If new command is issued after undoing, trim history beyond current index
+              if (currentIndex < issuedHistory.size() - 1) {
+                issuedHistory.subList(currentIndex + 1, issuedHistory.size()).clear();
+              }
+
+              issuedHistory.add(newCommand);
+              currentIndex = issuedHistory.size() - 1;
+
+              System.out.println("\nIssued command: " + newCommand);
               break;
 
             case "u":
-              if (lastCommand != null) {
-                redoCommand = lastCommand;
-                System.out.println("\nUndid command: " + lastCommand);
-                lastCommand = null;
+              if (currentIndex >= 0) {
+                System.out.println("\nUndid command: " + issuedHistory.get(currentIndex));
+                issuedHistory.remove(currentIndex);
+                currentIndex--;
               } else {
                 System.out.println("\n⚠️ No command to undo.");
               }
               break;
 
             case "r":
-              if (redoCommand != null) {
-                lastCommand = redoCommand;
-                System.out.println("\nRedid command: " + redoCommand);
-                redoCommand = null;
+              if (currentIndex > 0) {
+                currentIndex--;
+                System.out.println("\nRedid command: " + issuedHistory.get(currentIndex));
               } else {
-                System.out.println("\n⚠️ No command to redo.");
+                System.out.println("\n⚠️ No previous command to redo.");
               }
+              break;
+
+            case "l":
+              System.out.println("\n----- List of all commands -----");
+              print(commandArray);
               break;
 
             case "q":
