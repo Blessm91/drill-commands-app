@@ -1,0 +1,36 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "java",
+      "name": "App",
+      "request": "launch",
+      "mainClass": "com.chavvicalc.App",
+      "projectName": "chaavi-calc"
+    },
+    {
+      "type": "java",
+      "name": "App",
+      "request": "launch",
+      "mainClass": "chavviCalc2.App",
+      "projectName": ""
+    },
+    {
+      "type": "java",
+      "name": "ChavviCalcExampleApp",
+      "request": "launch",
+      "mainClass": "com.chavviCalcExample.ChavviCalcExampleApp",
+      "projectName": ""
+    },
+    {
+      "type": "java",
+      "name": "Run Chaavi Calc",
+      "request": "launch",
+      "mainClass": "com.fredo.chavvicalc.App",
+      "projectName": "chaavi-calc",
+      "console": "integratedTerminal",
+      "vmArgs": "-Dfile.encoding=UTF-8"
+    }
+  ]
+}
+
