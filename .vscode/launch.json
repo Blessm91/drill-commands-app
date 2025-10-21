@@ -3,6 +3,13 @@
   "configurations": [
     {
       "type": "java",
+      "name": "CavazosExample",
+      "request": "launch",
+      "mainClass": "com.cavazos.CavazosExample",
+      "projectName": "chaavi-calc"
+    },
+    {
+      "type": "java",
       "name": "App",
       "request": "launch",
       "mainClass": "com.chavvicalc.App",
